@@ -76,3 +76,19 @@ body {
 .diff li.diff-block-info {
   background: none repeat scroll 0 0 gray;
 }
+
+/* Line numbers */
+
+.diff .line-numbers {
+  display: block;
+}
+
+.diff .line-number {
+  background-color: #CECECE;
+  color: #121212;
+  margin-right: 10px;
+  width: 100px;
+  float: left;
+  display: block;
+  text-align: right;
+}
