@@ -1,0 +1,28 @@
+!!! html
+%html
+  %head
+    %link{:href => 'assets/app.css', :rel => 'stylesheet', :type => 'text/css'}
+    %meta{:charset => 'utf-8'}
+  %body
+
+    %div.panel.navbar.navbar-default{:role => 'navigation'}
+      %div.container
+        %div.navbar-header
+          %button.navbar-toggle{:type => 'button', 'data-toggle' => 'collapse', 'data-target' => '#main-navbar-collapse'} More
+          %strong
+            %a.navbar-brand{:href => path(:home_path)} Fancy Print
+        %div#main-navbar-collapse.collapse.navbar-collapse
+          %ul.nav.navbar-nav.pull-right
+            %li
+              %a{:href => ''} About
+            %li
+              %a{:href => ''} How it works
+            %li
+              %a{:href => ''} Press
+            %li
+              %a{:href => ''} Contact
+
+    %div.container
+      = yield
+
+    %script{:type => 'text/javascript', :src => 'assets/app.js'}
