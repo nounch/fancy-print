@@ -9,14 +9,14 @@ body {
 }
 
 /* Diffs */
-.diff{
+.diff {
   overflow: auto;
   padding: 5px;
   border-radius: 3px;
   border: 1px solid #EAEAEA;
 }
 
-.diff ul{
+.diff ul {
   background: #fff;
   overflow: auto;
   font-size: 13px;
@@ -27,7 +27,7 @@ body {
   width: 100%;
 }
 
-.diff del, .diff ins{
+.diff del, .diff ins {
   display: block;
   text-decoration: none;
 }
@@ -39,7 +39,7 @@ body {
   height: 1em;
 }
 
-.diff li.ins{
+.diff li.ins {
   background: #ddffdd;
   color: #008800;
 }
@@ -49,22 +49,22 @@ body {
   color: #bb0000;
 }
 
-.diff li:hover{
+.diff li:hover {
   background: #ffffcc;
 }
 
-/* try 'whitespace: pre;' if you don't want lines to wrap */
-.diff del, .diff ins, .diff span{
-  white-space: pre-wrap;
+/* try 'white-space: pre;' if you don't want lines to wrap, else `pre-wrap' */
+.diff del, .diff ins, .diff span {
+  white-space: pre;
   font-family: courier;
 }
 
-.diff del strong{
+.diff del strong {
   font-weight: normal;
   background: #ffcccc;
 }
 
-.diff ins strong{
+.diff ins strong {
   font-weight: normal;
   background: #99ff99;
 }
@@ -80,15 +80,42 @@ body {
 /* Line numbers */
 
 .diff .line-numbers {
-  display: block;
+  display: table-column;
+  width: 70px;
+  position: absolute;
 }
 
 .diff .line-number {
-  background-color: #CECECE;
+  background-color: #F8F8F8;
   color: #121212;
   margin-right: 10px;
-  width: 100px;
+  padding-right: 5px;
+  width: 50px;
   float: left;
-  display: block;
+  display: table-cell;
   text-align: right;
+  line-height: 19.5px;
+  font-size: 13px;
+  font-family: courier;
+
+  margin-left: -5px;
+  border-left: 5px solid #FFFFFF;
+  /* font-weight: normal; */
+  /* text-decoration: none; */
+  /* padding-top: 0; */
+  /* padding-bottom: 0; */
+  /* margin-top: 0; */
+  /* margin-bottom: 0; */
+}
+
+.diff ul {
+  padding-left: 50px;
+}
+
+.diff * {
+  line-height: 20px;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 0;
+  margin-bottom: 0;
 }

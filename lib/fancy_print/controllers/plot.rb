@@ -15,8 +15,10 @@ module FancyPrint
         }
       elsif params[:type] == 'diff'
         diff = Diffy::Diff.new(params[:a], params[:b]).to_s(:html)
+        ascii = Diffy::Diff.new(params[:a], params[:b])
         response = {
           :data => diff,
+          :ascii => ascii,
           :description => params[:description] || '',
           :time => Time.now || '',
           :type => 'diff',
