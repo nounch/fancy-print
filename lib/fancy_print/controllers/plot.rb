@@ -46,7 +46,8 @@ module FancyPrint
           :time => Time.now || '',
           :type => 'text',
         }
-      elsif params[:type] = 'markup'
+      elsif params[:type] == 'markup'
+        # Markup
         markup = params[:data]
         lang = params[:lang] || 'md'
         rendered = GitHub::Markup.render('file.' + lang, markup)
@@ -56,6 +57,20 @@ module FancyPrint
           :description => params[:description] || '',
           :time => Time.now || '',
           :type => 'markup',
+        }
+      elsif params[:type] == 'html'
+        response = {
+          :data => params[:data],
+          :description => params[:description] || '',
+          :time => Time.now || '',
+          :type => 'html',
+        }
+      elsif params[:type] == 'svg'
+        response = {
+          :data => params[:data],
+          :description => params[:description] || '',
+          :time => Time.now || '',
+          :type => 'svg',
         }
       end
 

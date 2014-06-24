@@ -135,11 +135,11 @@ This is *three*.
           puts 'Shining'
         end
 
-## Four
+        ## Four
 
-This is /four/.
+        This is /four/.
 
-```ruby
+          ```ruby
 def sun
   puts 'Shining'
 end
@@ -158,6 +158,54 @@ MARKUP
                       })
 end
 
+def post_html_data
+  html = <<-HTML
+<p>Here is an <strong>unordered</strong> list:</p>
+<ul>
+  <li>First list item</li>
+  <li>Second list item</li>
+  <li>Third list item</li>
+  <li>Fourth list item</li>
+  <li>Fifth list item</li>
+</ul>
+HTML
+  Net::HTTP.post_form(URI.parse(@plot_url),
+                      {
+                        'data' => html,
+                        'description' =>
+                        'This is a random HTML description #' +
+                        rand.to_s,
+                        'type' => 'html',
+                      })
+end
+
+def post_svg_data
+  svg = <<-SVG
+<svg width="5cm" height="4cm" version="1.1"
+     xmlns="http://www.w3.org/2000/svg">
+  <desc>Four separate rectangles
+  </desc>
+    <rect x="0.5cm" y="0.5cm" width="2cm" height="1cm"/>
+    <rect x="0.5cm" y="2cm" width="1cm" height="1.5cm"/>
+    <rect x="3cm" y="0.5cm" width="1.5cm" height="2cm"/>
+    <rect x="3.5cm" y="3cm" width="1cm" height="0.5cm"/>
+
+  <!-- Show outline of canvas using 'rect' element -->
+  <rect x=".01cm" y=".01cm" width="4.98cm" height="3.98cm"
+        fill="none" stroke="blue" stroke-width=".02cm" />
+
+</svg>
+SVG
+  Net::HTTP.post_form(URI.parse(@plot_url),
+                      {
+                        'data' => svg,
+                        'description' =>
+                        'This is a random SVG description #' +
+                        rand.to_s,
+                        'type' => 'svg',
+                      })
+end
+
 # rand(0..5).times { post_plot_data() }
 # rand(0..5).times { post_diff_data() }
 # rand(0..5).times { post_text_data() }
@@ -168,9 +216,14 @@ end
 # post_markup_data()
 
 post_methods = [
-:post_plot_data,
-:post_diff_data,
-:post_text_data,
-:post_markup_data,
-]
-rand(0..5).times {  self.send(post_methods.sample) }
+                :post_plot_data,
+                :post_diff_data,
+                :post_text_data,
+                :post_markup_data,
+                :post_html_data,
+                :post_svg_data,
+               ]
+# rand(0..5).times {  self.send(post_methods.sample) }
+
+post_html_data()
+post_svg_data()
