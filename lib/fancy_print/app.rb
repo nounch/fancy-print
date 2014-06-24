@@ -6,6 +6,7 @@ require 'em-websocket'
 require 'thin'
 require 'json'
 require 'diffy'
+require 'github/markup'
 
 
 $channel = EventMachine::Channel.new

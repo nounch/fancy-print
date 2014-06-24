@@ -38,16 +38,24 @@ module FancyPrint
         end
         # Replace all RegExps
         regexps.each do |token|
-          puts "###########################################################################"
-          puts token.inspect
-          puts Regexp.new(token).inspect
           text.gsub!(Regexp.new(token), prefix + "\\0" + suffix)
         end
         response = {
-          'data' => text,
+          :data => text,
           :description => params[:description] || '',
           :time => Time.now || '',
           :type => 'text',
+        }
+      elsif params[:type] = 'markup'
+        markup = params[:data]
+        lang = params[:lang] || 'md'
+        rendered = GitHub::Markup.render('file.' + lang, markup)
+        response = {
+          :data => rendered,
+          :markup => markup,
+          :description => params[:description] || '',
+          :time => Time.now || '',
+          :type => 'markup',
         }
       end
 

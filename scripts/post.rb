@@ -117,12 +117,60 @@ TEXT
                       })
 end
 
+def post_markup_data
+  markup = <<-MARKUP
+# One
+
+This is *one*.
+
+# Two
+
+This is /two/.
+
+## Three
+
+This is *three*.
+
+        def sun
+          puts 'Shining'
+        end
+
+## Four
+
+This is /four/.
+
+```ruby
+def sun
+  puts 'Shining'
+end
+```
+
+That's it!
+MARKUP
+  Net::HTTP.post_form(URI.parse(@plot_url),
+                      {
+                        'data' => markup,
+                        'lang' => 'md',
+                        'description' =>
+                        'This is a random markup description #' +
+                        rand.to_s,
+                        'type' => 'markup',
+                      })
+end
+
 # rand(0..5).times { post_plot_data() }
 # rand(0..5).times { post_diff_data() }
 # rand(0..5).times { post_text_data() }
-post_diff_data()
-post_text_data()
+# rand(0..5).times { post_markup_data() }
 
-# DEBUG
-# require 'pp'
-# pp data
+# post_diff_data()
+# post_text_data()
+# post_markup_data()
+
+post_methods = [
+:post_plot_data,
+:post_diff_data,
+:post_text_data,
+:post_markup_data,
+]
+rand(0..5).times {  self.send(post_methods.sample) }
