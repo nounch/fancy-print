@@ -4,6 +4,26 @@ module FancyPrint
       haml :home, :layout => :application
     end
 
+    def generate_html_table(data, head)
+      head = head || false
+      max_cells = data.collect() { |row| row.length }.max
+      html = '<table class="table table-hover table-responsive \
+table-bordered table-condensed">'
+      data.each_with_index do |row, idx|
+        html << '<tr>'
+        html << '<thead>' if (idx == 0 && head)
+        max_cells.times do |i|
+          html << (idx == 0 && head ? '<th>' : '<td>') +
+            (CGI.escapeHTML(row[i].to_s) || '&nbsp;') +
+            (idx == 0 && head ? '</th>' : '</td>')
+        end
+        html << '</thead><tbody>' if (idx == 0 && head)
+        html << '</tr>'
+      end
+      html << '</tbody>' if head
+      html << '</table>'
+    end
+
     def plot_plot
       if ['scatter', 'line', ''].include?(params[:type])
         # Line + scatter plot
@@ -75,7 +95,7 @@ module FancyPrint
           :type => 'svg',
         }
       elsif params[:type] == 'image'
-        # SVG
+        # Image
         image_type = params[:img_type] || ''
         image_type += 'image/' if image_type != ''
         encoded = ';base64,' + params[:data]
@@ -84,6 +104,20 @@ module FancyPrint
           :description => params[:description] || '',
           :time => Time.now || '',
           :type => 'image',
+        }
+      elsif params[:type] == 'table'
+        # Table
+        if params[:head]
+          head = (params[:head] == 'false' ? false : true)
+        else
+          head = false
+        end
+        table = generate_html_table(JSON.parse(params[:data]), head)
+        response = {
+          :data => table,
+          :description => params[:description] || '',
+          :time => Time.now || '',
+          :type => 'table',
         }
       end
 

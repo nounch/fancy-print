@@ -1,5 +1,6 @@
 require 'net/http'
 require 'base64'
+require 'json'
 
 
 @plot_url = 'http://localhost:3044/plot'
@@ -220,7 +221,27 @@ def post_image_data
                       })
 end
 
-# File.write('image.html', '<img src="data:image/png;base64,' + Base64.encode64(File.read(File.new('image.png'))) + '" alt="Image"/>')
+def post_table_data
+  table =
+    [
+     ['Color Name', 'Hex Value', 'Description', 'Notes'],
+     ['red', '#FF0000', 'Often used for errors.', '---'],
+     ['green', '#00FF00', 'Often used for success.',
+      '<p style="color: #00FF00;">I am green.</p>'],
+     ['blue', '#0000FF', '---', 'Link color'],
+     ['yellow', '#FFFF00', 'Often used for warnings.'],
+    ]
+  Net::HTTP.post_form(URI.parse(@plot_url),
+                      {
+                        'data' => table.to_json,
+                        # 'head' => 'true',
+                        'head' => 'false',
+                        'description' =>
+                        'This is a random table description #' +
+                        rand.to_s,
+                        'type' => 'table',
+                      })
+end
 
 # rand(0..5).times { post_plot_data() }
 # rand(0..5).times { post_diff_data() }
@@ -239,5 +260,8 @@ post_methods = [
                 :post_html_data,
                 :post_svg_data,
                 :post_image_data,
+                :post_table_data,
                ]
 rand(0..5).times {  self.send(post_methods.sample) }
+
+# post_table_data()

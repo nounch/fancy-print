@@ -7,6 +7,7 @@ require 'thin'
 require 'json'
 require 'diffy'
 require 'github/markup'
+require 'cgi'
 
 
 $channel = EventMachine::Channel.new
