@@ -1,4 +1,5 @@
 require 'net/http'
+require 'base64'
 
 
 @plot_url = 'http://localhost:3044/plot'
@@ -139,7 +140,7 @@ This is *three*.
 
         This is /four/.
 
-          ```ruby
+```ruby
 def sun
   puts 'Shining'
 end
@@ -206,6 +207,21 @@ SVG
                       })
 end
 
+def post_image_data
+  image = Base64.encode64(File.read(File.new('image.png')))
+  Net::HTTP.post_form(URI.parse(@plot_url),
+                      {
+                        'data' => image,
+                        'image_type' => 'png',
+                        'description' =>
+                        'This is a random image description #' +
+                        rand.to_s,
+                        'type' => 'image',
+                      })
+end
+
+# File.write('image.html', '<img src="data:image/png;base64,' + Base64.encode64(File.read(File.new('image.png'))) + '" alt="Image"/>')
+
 # rand(0..5).times { post_plot_data() }
 # rand(0..5).times { post_diff_data() }
 # rand(0..5).times { post_text_data() }
@@ -222,8 +238,6 @@ post_methods = [
                 :post_markup_data,
                 :post_html_data,
                 :post_svg_data,
+                :post_image_data,
                ]
-# rand(0..5).times {  self.send(post_methods.sample) }
-
-post_html_data()
-post_svg_data()
+rand(0..5).times {  self.send(post_methods.sample) }

@@ -59,6 +59,7 @@ module FancyPrint
           :type => 'markup',
         }
       elsif params[:type] == 'html'
+        # HTML
         response = {
           :data => params[:data],
           :description => params[:description] || '',
@@ -66,11 +67,23 @@ module FancyPrint
           :type => 'html',
         }
       elsif params[:type] == 'svg'
+        # SVG
         response = {
           :data => params[:data],
           :description => params[:description] || '',
           :time => Time.now || '',
           :type => 'svg',
+        }
+      elsif params[:type] == 'image'
+        # SVG
+        image_type = params[:img_type] || ''
+        image_type += 'image/' if image_type != ''
+        encoded = ';base64,' + params[:data]
+        response = {
+          :data => encoded.to_s,
+          :description => params[:description] || '',
+          :time => Time.now || '',
+          :type => 'image',
         }
       end
 
