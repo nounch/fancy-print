@@ -79,16 +79,18 @@ body {
 
 /* Line numbers */
 
-.diff .line-numbers {
+.line-numbers {
   display: table-column;
   width: 70px;
   position: absolute;
 }
 
-.diff .line-number {
+.line-number {
   background-color: #F8F8F8;
   color: #121212;
   margin-right: 10px;
+  padding-top: 0;
+  padding-bottom: 0;
   padding-right: 5px;
   width: 50px;
   float: left;
@@ -97,15 +99,10 @@ body {
   line-height: 19.5px;
   font-size: 13px;
   font-family: courier;
-
   margin-left: -5px;
+  border-top: 0;
+  border-bottom: 0;
   border-left: 5px solid #FFFFFF;
-  /* font-weight: normal; */
-  /* text-decoration: none; */
-  /* padding-top: 0; */
-  /* padding-bottom: 0; */
-  /* margin-top: 0; */
-  /* margin-bottom: 0; */
 }
 
 .diff ul {
@@ -118,4 +115,29 @@ body {
   padding-bottom: 0;
   margin-top: 0;
   margin-bottom: 0;
+}
+
+/* Text */
+
+.text-highlighted {
+  background-color: #FFFF00;
+}
+
+.output-card div {
+  background-color: #FFFFFF;
+}
+
+.text-output {
+  padding: 5px;
+  border: 1px solid #EAEAEA;
+  border-radius: 3px;
+}
+
+.text-output .pre {
+  line-height: 20px;
+  font-size: 13px;
+  font-family: courier;
+  white-space: pre;
+  overflow: auto;
+  padding-left: 50px;
 }

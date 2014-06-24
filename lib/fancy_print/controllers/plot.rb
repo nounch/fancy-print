@@ -6,6 +6,7 @@ module FancyPrint
 
     def plot_plot
       if ['scatter', 'line', ''].include?(params[:type])
+        # Line + scatter plot
         response = {
           :data => JSON.parse(params[:data]),
           :description => params[:description] || '',
@@ -14,6 +15,7 @@ module FancyPrint
           ['scatter', ''].include?(params[:type])? 'line' : 'scatter',
         }
       elsif params[:type] == 'diff'
+        # Diff
         diff = Diffy::Diff.new(params[:a], params[:b]).to_s(:html)
         ascii = Diffy::Diff.new(params[:a], params[:b])
         response = {
@@ -23,10 +25,33 @@ module FancyPrint
           :time => Time.now || '',
           :type => 'diff',
         }
+      elsif params[:type] == 'text'
+        # Text
+        prefix = '<span class="text-highlighted">'
+        suffix = '</span>'
+        highlights = JSON.parse(params[:highlight]) || []
+        regexps = JSON.parse(params[:regex]) || []
+        text = params[:text]
+        # Replace all strings
+        highlights.each do |token|
+          text.gsub!(token, prefix + "\\0" + suffix)
+        end
+        # Replace all RegExps
+        regexps.each do |token|
+          puts "###########################################################################"
+          puts token.inspect
+          puts Regexp.new(token).inspect
+          text.gsub!(Regexp.new(token), prefix + "\\0" + suffix)
+        end
+        response = {
+          'data' => text,
+          :description => params[:description] || '',
+          :time => Time.now || '',
+          :type => 'text',
+        }
       end
 
       $channel.push response.to_json
-      # $channel.push 'Here is some data.'
       nil
     end
   end
