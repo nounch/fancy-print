@@ -243,6 +243,32 @@ def post_table_data
                       })
 end
 
+def post_haml_data
+  haml = <<-HAML
+%p
+  This is a
+  %strong HAML
+  test.
+  
+%p
+  Here is a list:
+  %ul
+    %li One
+    %li Two
+    %li Three
+    %li Four
+    %li Five
+HAML
+  Net::HTTP.post_form(URI.parse(@plot_url),
+                      {
+                        'data' => haml,
+                        'description' =>
+                        'This is a random HAML description #' +
+                        rand.to_s,
+                        'type' => 'haml',
+                      })
+end
+
 # rand(0..5).times { post_plot_data() }
 # rand(0..5).times { post_diff_data() }
 # rand(0..5).times { post_text_data() }
@@ -261,7 +287,6 @@ post_methods = [
                 :post_svg_data,
                 :post_image_data,
                 :post_table_data,
+                :post_haml_data,
                ]
 rand(0..5).times {  self.send(post_methods.sample) }
-
-# post_table_data()

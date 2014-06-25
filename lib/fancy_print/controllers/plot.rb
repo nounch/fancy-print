@@ -119,6 +119,15 @@ table-bordered table-condensed">'
           :time => Time.now || '',
           :type => 'table',
         }
+      elsif params[:type] == 'haml'
+        # Table
+        html = Haml::Engine.new(params[:data]).render
+        response = {
+          :data => html,
+          :description => params[:description] || '',
+          :time => Time.now || '',
+          :type => 'html',
+        }
       end
 
       $channel.push response.to_json
