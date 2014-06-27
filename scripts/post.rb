@@ -3,7 +3,7 @@ require 'base64'
 require 'json'
 
 
-@plot_url = 'http://localhost:3044/plot'
+@post_url = 'http://localhost:3044/plot'
 
 def generate_plots
   data = []
@@ -19,7 +19,7 @@ end
 
 def post_plot_data
   data = generate_plots()
-  Net::HTTP.post_form(URI.parse(@plot_url),
+  Net::HTTP.post_form(URI.parse(@post_url),
                       {
                         'data' => data.to_s,
                         'description' =>
@@ -46,7 +46,7 @@ cool
 amazing diff test.
 STRING2
 
-  Net::HTTP.post_form(URI.parse(@plot_url),
+  Net::HTTP.post_form(URI.parse(@post_url),
                       {
                         # 'a' => a + a + a + a + a + a + a + a + a + a + a +
                         # a + a + a + a + a + a + a + a + a + a + a,
@@ -106,7 +106,7 @@ DESCRIPTION
        man -a intro
 
 TEXT
-  Net::HTTP.post_form(URI.parse(@plot_url),
+  Net::HTTP.post_form(URI.parse(@post_url),
                       {
                         'highlight' => '["one", "two", "three", "four"]',
                         'regex' =>
@@ -141,7 +141,7 @@ This is *three*.
 
         This is /four/.
 
-```ruby
+          ```ruby
 def sun
   puts 'Shining'
 end
@@ -149,7 +149,7 @@ end
 
 That's it!
 MARKUP
-  Net::HTTP.post_form(URI.parse(@plot_url),
+  Net::HTTP.post_form(URI.parse(@post_url),
                       {
                         'data' => markup,
                         'lang' => 'md',
@@ -171,7 +171,7 @@ def post_html_data
   <li>Fifth list item</li>
 </ul>
 HTML
-  Net::HTTP.post_form(URI.parse(@plot_url),
+  Net::HTTP.post_form(URI.parse(@post_url),
                       {
                         'data' => html,
                         'description' =>
@@ -198,7 +198,7 @@ def post_svg_data
 
 </svg>
 SVG
-  Net::HTTP.post_form(URI.parse(@plot_url),
+  Net::HTTP.post_form(URI.parse(@post_url),
                       {
                         'data' => svg,
                         'description' =>
@@ -210,7 +210,7 @@ end
 
 def post_image_data
   image = Base64.encode64(File.read(File.new('image.png')))
-  Net::HTTP.post_form(URI.parse(@plot_url),
+  Net::HTTP.post_form(URI.parse(@post_url),
                       {
                         'data' => image,
                         'image_type' => 'png',
@@ -231,7 +231,7 @@ def post_table_data
      ['blue', '#0000FF', '---', 'Link color'],
      ['yellow', '#FFFF00', 'Often used for warnings.'],
     ]
-  Net::HTTP.post_form(URI.parse(@plot_url),
+  Net::HTTP.post_form(URI.parse(@post_url),
                       {
                         'data' => table.to_json,
                         # 'head' => 'true',
@@ -249,7 +249,7 @@ def post_haml_data
   This is a
   %strong HAML
   test.
-  
+
 %p
   Here is a list:
   %ul
@@ -259,7 +259,7 @@ def post_haml_data
     %li Four
     %li Five
 HAML
-  Net::HTTP.post_form(URI.parse(@plot_url),
+  Net::HTTP.post_form(URI.parse(@post_url),
                       {
                         'data' => haml,
                         'description' =>

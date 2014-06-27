@@ -8,6 +8,7 @@ require 'json'
 require 'diffy'
 require 'github/markup'
 require 'cgi'
+require 'yaml'
 
 
 $channel = EventMachine::Channel.new
@@ -47,6 +48,11 @@ EventMachine.run do
   require_relative 'controllers/init'
   require_relative 'routes/init'
 
-  Thin::Server.start FancyPrint::App, '0.0.0.0', 3044
+  config =
+    YAML.load_file(File.expand_path('../../../bin/config.yaml'))
+  Thin::Server.start(FancyPrint::App, config['host'].to_s,
+                     config['port'].to_i)
+  # Alternative (without the app):
+  #
   # Thin::Server.run!
 end
