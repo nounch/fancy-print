@@ -43,8 +43,8 @@ module FancyPrint
   class Client
     public
 
-    config = YAML.load_file(File.expand_path('../../../bin/config.yaml'))
-    @@post_url = 'http://' + config['host'] + ':' + config['port'] +
+    config = YAML.load_file(File.expand_path('../../../../bin/config.yaml', __FILE__))
+    @@post_url = 'http://' + config['host'] + ':' + config['port'].to_s +
       '/plot'
     @@description_identifier = :msg
 
@@ -58,7 +58,7 @@ module FancyPrint
       Net::HTTP.post_form(URI.parse(@@post_url),
                           {
                             'data' =>
-                            self.restructure_plot_data(data) .to_json,
+                            self.restructure_plot_data(data).to_json,
                             'description' => description.to_s,
                             'type' => type,
                           })
@@ -179,9 +179,9 @@ module FancyPrint
 
     def self.restructure_plot_data(data)
       if data[0] && data[0].class != Array
-        new_data = []
+        new_data = [[]]
         data.each_with_index do |dat, i|
-          new_data << [i, dat]
+          new_data[0] << [i, dat]
         end
       else
         new_data = data

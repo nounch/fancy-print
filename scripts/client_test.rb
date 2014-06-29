@@ -166,7 +166,7 @@ SVG
 end
 
 def test_fp_image
-  image = File.read(File.new('image.png'))
+  image = File.read(File.dirname(__FILE__) + '/image.png')
   fp_image(image, :msg => 'This is a random image description ' +
            rand.to_s, :type => 'png')
 end

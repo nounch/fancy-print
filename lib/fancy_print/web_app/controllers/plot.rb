@@ -32,7 +32,7 @@ table-bordered table-condensed">'
           :description => params[:description] || '',
           :time => Time.now || '',
           :type =>
-          ['scatter', ''].include?(params[:type])? 'line' : 'scatter',
+          ['scatter', ''].include?(params[:type]) ? 'scatter' : 'line',
         }
       elsif params[:type] == 'diff'
         # Diff
