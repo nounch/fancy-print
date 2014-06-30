@@ -36,7 +36,6 @@ EventMachine.run do
   end
 
 
-
   module FancyPrint
     class App < Sinatra::Base
       register Sinatra::AssetPipeline
@@ -51,8 +50,8 @@ EventMachine.run do
   config =
     YAML.load_file(File.expand_path('../../../../bin/config.yaml',
                                     __FILE__))
-  Thin::Server.start(FancyPrint::App, config['host'].to_s,
-                     config['port'].to_i)
+  Thin::Server.start(FancyPrint::App, config[:host].to_s,
+                     config[:port].to_i)
   Signal.trap('TERM') { exit 0  }
   Signal.trap('INT') { exit 0  }
   # Alternative (without the app):

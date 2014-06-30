@@ -43,8 +43,9 @@ module FancyPrint
   class Client
     public
 
-    config = YAML.load_file(File.expand_path('../../../../bin/config.yaml', __FILE__))
-    @@post_url = 'http://' + config['host'] + ':' + config['port'].to_s +
+    config = YAML.load_file(File.expand_path('../../../../bin/config.yaml',
+                                             __FILE__))
+    @@post_url = 'http://' + config[:host] + ':' + config[:port].to_s +
       '/plot'
     @@description_identifier = :msg
 
@@ -62,6 +63,7 @@ module FancyPrint
                             'description' => description.to_s,
                             'type' => type,
                           })
+      nil
     end
 
     def self.fp(data, **options)
@@ -77,6 +79,7 @@ module FancyPrint
                             'description' => description.to_s,
                             'type' => 'diff',
                           })
+      nil
     end
 
     def self.fp_text(text, **options)
@@ -98,6 +101,7 @@ module FancyPrint
                             'description' => description.to_s,
                             'type' => 'text',
                           })
+      nil
     end
 
     def self.fp_markup(markup, **options)
@@ -110,6 +114,7 @@ module FancyPrint
                             'description' => description.to_s,
                             'type' => 'markup',
                           })
+      nil
     end
 
     def self.fp_html(html, **options)
@@ -120,6 +125,7 @@ module FancyPrint
                             'description' => description.to_s,
                             'type' => 'html',
                           })
+      nil
     end
 
     def self.fp_svg(svg, **options)
@@ -143,6 +149,7 @@ module FancyPrint
                             'description' => description.to_s,
                             'type' => 'image',
                           })
+      nil
     end
 
     def self.fp_table(data, **options)
@@ -163,6 +170,7 @@ module FancyPrint
                             'description' => description.to_s,
                             'type' => 'table',
                           })
+      nil
     end
 
     def self.fp_haml(haml, **options)
@@ -173,6 +181,7 @@ module FancyPrint
                             'description' => description.to_s,
                             'type' => 'haml',
                           })
+      nil
     end
 
     private

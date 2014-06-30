@@ -1,96 +1,11 @@
 #!/usr/bin/env ruby
 
 
-require 'docopt'
-require 'json'
-require 'yaml'
-require_relative '../lib/fancy_print/client/fancy_print'
+# require 'docopt'
+# require 'json'
+# require 'yaml'
+# require_relative '../lib/fancy_print/client/fancy_print'
 
+require_relative '../lib/fancy_print/cli/cli'
 
-doc = <<-DOCOPT
-FancyPrint prins things to your browser.
-
-Usage:
-  #{__FILE__} server
-  #{__FILE__} plot [<data>|-f <file>] [--scatter] [--msg=<message>]
-  #{__FILE__} diff [<string1> <string2>|--file1=<file1> --file2=<file2>] [--msg=<message>]
-  #{__FILE__} text [<string>|-f <file>] [--highlight=<strings>|--regex=<regexps>] [--msg=<message>]
-  #{__FILE__} markup [<string>|-f <file>] --lang=<extension> [--msg=<message>]
-  #{__FILE__} html [<string>|-f <file>] [--msg=<message>]
-  #{__FILE__} svg [<string>|-f <file>] [--msg=<message>]
-  #{__FILE__} image <file> [--msg=<message>]
-  #{__FILE__} table [<data>|-f <file>] [--head] [--msg=<message>]
-  #{__FILE__} haml [<string>|-f <file>] [--msg=<message>]
-
-Options:
-  -p --port              Port to use for the server.
-  --scatter              Use scatter plot (instead of line plot).
-  --highlight=<strings>  A list of strings to hightlight.
-  --regex=<regexps>      A list of regular expressions to hightlight.
-  --lang=<extension>      Markup language type (file extension like `md' or `textile').
-  --head                 Use the first line of data as table head.
-
-DOCOPT
-
-options = []
-begin
-  options = Docopt::docopt(doc)
-rescue Docopt::Exit => e
-  puts e.message
-end
-
-def unescape_string(string)
-  YAML.load(%Q(---\n"#{string}"\n))
-end
-
-if !options.empty?
-  if options['server']
-    Dir.chdir(File.expand_path('../../lib/fancy_print/web_app/',
-                               __FILE__)) do
-      # `require_relative' is always relative to the file it is included
-      # in; so it still needs the prefix `../lib/fancy_print/' here
-      # (despite being run in the `Dir.chdir' block).
-      # `sinatra-asset-pipeline', however, depends on the current working
-      # directory to be the one where `app.rb' is located at. Hence the use
-      # of the `Dir.chdir' block.
-      require_relative '../lib/fancy_print/web_app/app'
-    end
-  elsif options['plot']
-    data = JSON.parse(options['<data>'] || File.read(options['<file>']))
-    fp_plot(data, :msg => options['--msg'] || '', :scatter =>
-            options['--scatter'])
-  elsif options['diff']
-    a = options['<string1>'] || File.read(options['--file1'])
-    b = options['<string2>'] || File.read(options['--file2'])
-    fp_diff(a, b, :msg => options['--msg'] || '')
-  elsif options['text']
-    fp_text(options['<string>'] || File.read(options['<file>']), :msg =>
-            options['--msg'] || '')
-  elsif options['markup']
-    fp_markup(unescape_string(options['<string>']) ||
-              File.read(options['<file>']), :lang => options['lang'] ||
-              'md', :msg => options['--msg'] || '')
-  elsif options['html']
-    fp_html(options['<string>'] || File.read(options['<file>']), :msg =>
-            options['--msg'] || '')
-  elsif options['svg']
-    fp_svg(options['<string>'] || File.read(options['<file>']), :msg =>
-           options['--msg'] || '')
-  elsif options['image']
-    image = options['<file>']
-    fp_image(File.read(image), :type =>
-             File.extname(image).gsub(%r{\.}, ''), :msg =>
-             options['--msg'] || '')
-  elsif options['table']
-    data = JSON.parse(options['<data>'] || File.read(options['<file>']))
-    fp_table(data, :head => options['--head'], :msg =>
-             options['--msg'] || '')
-  elsif options['haml']
-    if options['<string>']
-      markup = unescape_string(options['<string>'])
-    else
-      markup = File.read(options['<file>'])
-    end
-    fp_haml(markup, :msg => options['--msg'] || '')
-  end
-end
+FancyPrint::CLI.run(File.basename(__FILE__))
