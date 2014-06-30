@@ -78,7 +78,7 @@ DOCOPT
               # depends on the current working directory to be the one where
               # `app.rb' is located at. Hence the use of the `Dir.chdir'
               # block.
-              require_relative '../web_app/app' if
+              require_relative '../web_app/run' if
                 config_file_written
             end
           elsif options['plot']
