@@ -50,8 +50,19 @@ table-bordered table-condensed">'
           # Text
           prefix = '<span class="text-highlighted">'
           suffix = '</span>'
-          highlights = JSON.parse(params[:highlight]) || []
-          regexps = JSON.parse(params[:regex]) || []
+          # highlights = JSON.parse(params[:highlight]) || []
+          if params[:highlight] && params[:highlight].class == Array
+            puts '..............................'
+            highlights = JSON.parse(params[:highlight])
+          else
+            highlights = []
+          end
+          # regexps = JSON.parse(params[:regex]) || []
+          if params[:regex] && params[:regex].class == Array
+            regexps = JSON.parse(params[:regex])
+          else
+            regexps = []
+          end
           text = params[:text]
           # Replace all strings
           highlights.each do |token|
@@ -101,7 +112,8 @@ table-bordered table-condensed">'
           image_type += 'image/' if image_type != ''
           encoded = ';base64,' + params[:data]
           response = {
-            :data => encoded.to_s,
+            :data => encoded.to_s.force_encoding('ISO-8859-1')
+              .encode('UTF-8'),
             :description => params[:description] || '',
             :time => Time.now || '',
             :type => 'image',
@@ -132,7 +144,7 @@ table-bordered table-condensed">'
         end
         status 200
         $channel.push response.to_json
-      rescue
+      rescue Exception => exception
         status 500
       end
       nil

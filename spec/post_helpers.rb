@@ -278,15 +278,15 @@ end
 # post_text_data()
 # post_markup_data()
 
-post_methods = [
-                :post_plot_data,
-                :post_diff_data,
-                :post_text_data,
-                :post_markup_data,
-                :post_html_data,
-                :post_svg_data,
-                :post_image_data,
-                :post_table_data,
-                :post_haml_data,
-               ]
-rand(0..5).times {  self.send(post_methods.sample) }
+# post_methods = [
+#                 :post_plot_data,
+#                 :post_diff_data,
+#                 :post_text_data,
+#                 :post_markup_data,
+#                 :post_html_data,
+#                 :post_svg_data,
+#                 :post_image_data,
+#                 :post_table_data,
+#                 :post_haml_data,
+#                ]
+# rand(0..5).times {  self.send(post_methods.sample) }

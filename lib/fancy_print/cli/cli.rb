@@ -2,6 +2,7 @@ require 'docopt'
 require 'json'
 require 'yaml'
 require_relative '../client/fancy_print'
+# require_relative '../web_app/runner'
 
 module FancyPrint
   class CLI
@@ -62,7 +63,8 @@ DOCOPT
             config_file_written = false
             config = {
               :host => options['--host'] || 'localhost',
-              :port => (options['--port'].to_i if options['--port']) || 4321,
+              :port =>
+              (options['--port'].to_i if options['--port']) || 4321,
             }
             File.delete(config_file) if File.exists?(config_file)
             File.open(config_file, 'w+') do |f|
@@ -75,11 +77,28 @@ DOCOPT
               # included in; so it still needs the prefix
               # `../lib/fancy_print/' here (despite being run in the
               # `Dir.chdir' block). `sinatra-asset-pipeline', however,
-              # depends on the current working directory to be the one where
-              # `app.rb' is located at. Hence the use of the `Dir.chdir'
-              # block.
-              require_relative '../web_app/run' if
-                config_file_written
+              # depends on the current working directory to be the one
+              # where `app.rb' is located at. Hence the use of the
+              # `Dir.chdir' block.
+              if config_file_written
+                # Start the WebSocket server.
+                require_relative '../web_app/runner'
+                FancyPrint::Runner.run()
+                # Start the application server.
+                require 'rack'
+                require_relative '../web_app/app'
+                # run FancyPrint::App
+                options = {
+                  :Host => config[:host],
+                  :Port => config[:port],
+                }
+                Rack::Handler::Thin.run(FancyPrint::App,
+                                        options) do |server|
+                  [:INT, :TERM].each do |sig|
+                    Signal.trap(sig) { server.stop }
+                  end
+                end
+              end
             end
           elsif options['plot']
             data = JSON.parse(options['<data>'] ||
@@ -125,7 +144,7 @@ DOCOPT
         end
       rescue
         puts <<-HINT
-Seems like the something is wrong. It could be one of those things:
+Seems like something is wrong. It could be one of those things:
 
   - There is no server running.
   - The data format is not correct.
