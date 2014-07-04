@@ -75,19 +75,22 @@ DOCOPT
             Dir.chdir(File.expand_path('../../web_app/', __FILE__)) do
               # `require_relative' is always relative to the file it is
               # included in; so it still needs the prefix
-              # `../lib/fancy_print/' here (despite being run in the
+              # `../lib/fancy_print/T' here (despite being run in the
               # `Dir.chdir' block). `sinatra-asset-pipeline', however,
               # depends on the current working directory to be the one
               # where `app.rb' is located at. Hence the use of the
               # `Dir.chdir' block.
               if config_file_written
-                # Start the WebSocket server.
-                require_relative '../web_app/runner'
-                FancyPrint::Runner.run()
+                # Alternative to starting the WebSocket server:
+                #
+                # require_relative '../web_app/runner'
+                # Thread.new do
+                #   FancyPrint::Runner.run()
+                # end
+
                 # Start the application server.
                 require 'rack'
                 require_relative '../web_app/app'
-                # run FancyPrint::App
                 options = {
                   :Host => config[:host],
                   :Port => config[:port],
@@ -135,14 +138,18 @@ DOCOPT
                      options['--msg'] || '')
           elsif options['haml']
             if options['<string>']
-              markup = unescape_string(options['<string>'])
+              begin
+                markup = unescape_string(options['<string>'])
+              rescue
+                markup = options['<string>']
+              end
             else
               markup = File.read(options['<file>'])
             end
             fp_haml(markup, :msg => options['--msg'] || '')
           end
         end
-      rescue
+      rescue Exception => exception
         puts <<-HINT
 Seems like something is wrong. It could be one of those things:
 

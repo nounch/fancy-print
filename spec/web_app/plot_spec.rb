@@ -3,24 +3,19 @@ require 'rspec/expectations'
 require 'rack/test'
 require 'json'
 
-require_relative '../lib/fancy_print/web_app/app'
-require_relative 'post_helpers'
+require_relative '../../lib/fancy_print/web_app/app'
 
 
 describe 'WebSocket component' do
   include Rack::Test::Methods
 
   def app
-    path = '../../lib/fancy_print/web_app/config.ru'
+    path = '../../../lib/fancy_print/web_app/config.ru'
     Rack::Builder.parse_file(File.expand_path(path, __FILE__)).first
   end
 
   describe 'Post output' do
     before(:all) do
-      require_relative '../lib/fancy_print/web_app/runner'
-      Thread.new do
-        FancyPrint::Runner.run()
-      end
       @plot_data =
         [
          [
@@ -79,7 +74,7 @@ describe 'WebSocket component' do
            })
     end
 
-    it 'prints a diff plot to the browser' do
+    it 'prints a diff to the browser' do
       a = <<-ASTRING
 This is
 a
@@ -158,64 +153,6 @@ MARKDOWN
       expect(last_response).to be_ok
     end
 
-    it 'prints markup to the browser' do
-      markdown = <<-MARKDOWN
-# One
-
-Here is some code:
-
-        def sun
-          puts 'Shining
-        end
-
-## Two
-
-This is number *two*.
-
-## Three
-
-This is number **three**.
-
-MARKDOWN
-      post('/plot',
-           {
-             :data => markdown,
-             :type => 'markup',
-             :lang => 'md',
-             :description => 'This is a text description.',
-           })
-      expect(last_response).to be_ok
-    end
-
-    it 'prints markup to the browser' do
-      markdown = <<-MARKDOWN
-# One
-
-Here is some code:
-
-        def sun
-          puts 'Shining
-        end
-
-## Two
-
-This is number *two*.
-
-## Three
-
-This is number **three**.
-
-MARKDOWN
-      post('/plot',
-           {
-             :data => markdown,
-             :type => 'markup',
-             :lang => 'md',
-             :description => 'This is a markup description.',
-           })
-      expect(last_response).to be_ok
-    end
-
     it 'prints HTML to the browser' do
       html = <<-HTML
 <div class="row">
@@ -258,7 +195,8 @@ SVG
     end
 
     it 'prints an image to the browser' do
-      image = File.read(File.dirname(__FILE__) + '/image.png')
+      image = File.read(File.expand_path('..', File.dirname(__FILE__)) +
+        '/res/image.png')
       post('/plot',
            {
              :data => image,

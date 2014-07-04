@@ -9,4 +9,5 @@ When adding a new output type, do this:
 4. Add a command line option to the CLI.
 
 Model the new output type according to the existing ones (e.g. provide a
-`--msg'/`:msg' option).
+`--msg` option for the command line interface and a `:msg` option for the
+client).

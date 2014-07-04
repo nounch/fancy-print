@@ -1,4 +1,12 @@
-require_relative '../lib/fancy_print/client/fancy_print'
+# This script is meant to be run manually.
+# It populates a browser output page with random output types.
+#
+# This is not part of an automatic test.
+# This is a convenience for development only.
+
+
+require_relative '../../lib/fancy_print/client/fancy_print'
+
 
 def generate_plots
   data = []
@@ -101,7 +109,7 @@ def test_fp_markup
 
 This is *one*.
 
-# Two
+## Two
 
 This is /two/.
 
@@ -115,11 +123,11 @@ This is *three*.
 
         --------
 
-          ## Four
+## Four
 
-          This is /four/.
+This is /four/.
 
-          ```ruby
+```ruby
 def sun
   puts 'Shining'
 end
@@ -166,7 +174,8 @@ SVG
 end
 
 def test_fp_image
-  image = File.read(File.dirname(__FILE__) + '/image.png')
+  image = File.read(File.expand_path('..', File.dirname(__FILE__)) +
+                    '/res/image.png')
   fp_image(image, :msg => 'This is a random image description ' +
            rand.to_s, :type => 'png')
 end
@@ -217,6 +226,7 @@ testing_methods =
    :test_fp_image,
    :test_fp_table,
   ]
+
 # Test random methods
 # rand(0..5).times {  self.send(testing_methods.sample) }
 # Test all methods

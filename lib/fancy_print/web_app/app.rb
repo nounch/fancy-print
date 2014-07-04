@@ -13,6 +13,14 @@ module FancyPrint
   class App < Sinatra::Base
     register Sinatra::AssetPipeline
     register Sinatra::Rroute
+
+    def initialize
+      require_relative 'runner'
+      Thread.new do
+        FancyPrint::Runner.run()
+      end
+      super()
+    end
   end
 
   require_relative 'controllers/init'
