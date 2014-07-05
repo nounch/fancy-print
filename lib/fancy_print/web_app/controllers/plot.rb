@@ -24,6 +24,16 @@ table-bordered table-condensed">'
       html << '</table>'
     end
 
+    def plot_websocket_info
+      begin
+        status 200
+        settings.websocket.to_json
+      rescue
+        status 500
+        nil
+      end
+    end
+
     def plot_plot
       begin
         if ['scatter', 'line', ''].include?(params[:type])
@@ -52,7 +62,6 @@ table-bordered table-condensed">'
           suffix = '</span>'
           # highlights = JSON.parse(params[:highlight]) || []
           if params[:highlight] && params[:highlight].class == Array
-            puts '..............................'
             highlights = JSON.parse(params[:highlight])
           else
             highlights = []

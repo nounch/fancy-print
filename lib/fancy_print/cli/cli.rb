@@ -1,8 +1,9 @@
 require 'docopt'
 require 'json'
 require 'yaml'
+
 require_relative '../client/fancy_print'
-# require_relative '../web_app/runner'
+
 
 module FancyPrint
   class CLI
@@ -14,7 +15,7 @@ FancyPrint prints things to your browser.
 
 Usage:
   #{command_name} -h|--help
-  #{command_name} server [--host=<hostname>] [-p=<port>|--port=<port>]
+  #{command_name} server [--host=<hostname>] [-p=<port>|--port=<port>] [--websocket-port=<ws_port>] [--websocket-host=<ws_host>]
   #{command_name} plot [<data>|-f <file>] [--scatter] [--msg=<message>]
   #{command_name} diff [<string1> <string2>|--file1=<file1> --file2=<file2>] [--msg=<message>]
   #{command_name} text [<string>|-f <file>] [--highlight=<strings>|--regex=<regexps>] [--msg=<message>]
@@ -58,13 +59,20 @@ DOCOPT
           if options['server']
             # Write the config file for the web app and the client etc. to
             # read from.
-            config_file = File.dirname(File.expand_path(__FILE__)) +
-              '/config.yaml'
+            config_file =
+              File.expand_path('../../..', File.dirname(__FILE__)) +
+              '/bin/config.yaml'
             config_file_written = false
             config = {
               :host => options['--host'] || 'localhost',
               :port =>
               (options['--port'].to_i if options['--port']) || 4321,
+              :websocket_port =>
+              (options['--websocket-port'].to_i if
+               options['--websocket-port']) || 5503,
+              :websocket_host =>
+              (options['--websocket-host'] if
+               options['--websocket-host']) || 'localhost',
             }
             File.delete(config_file) if File.exists?(config_file)
             File.open(config_file, 'w+') do |f|

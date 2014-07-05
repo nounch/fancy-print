@@ -21,6 +21,17 @@ module FancyPrint
       end
       super()
     end
+
+    configure do
+      config_file = File.expand_path('../../..', File.dirname(__FILE__)) +
+        '/bin/config.yaml'
+      config = YAML.load_file(config_file)
+      set :websocket, {
+        :host => config[:websocket_host],
+        :port => config[:websocket_port],
+      }
+    end
+
   end
 
   require_relative 'controllers/init'

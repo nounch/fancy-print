@@ -1,5 +1,6 @@
 require 'em-websocket'
 require 'thin'
+require 'yaml'
 
 require_relative 'app'
 
@@ -9,10 +10,16 @@ module FancyPrint
     def self.run
       $channel = EventMachine::Channel.new
 
+      config_file = File.expand_path('../../..', File.dirname(__FILE__)) +
+        '/bin/config.yaml'
+      config = YAML.load_file(config_file)
+
       EventMachine.run do
 
-        EventMachine::WebSocket.start(:host => '127.0.0.1', :port =>
-                                      '5503') do |ws|
+        EventMachine::WebSocket.start(:host => (config[:websocket_host] ||
+                                                'localhost'), :port =>
+                                      (config[:websocket_port].to_s ||
+                                       '5503')) do |ws|
           ws.onopen do |handshake|
             $sid = $channel.subscribe { |msg| ws.send msg }
           end
