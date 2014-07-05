@@ -30,6 +30,7 @@ module FancyPrint
         :host => config[:websocket_host],
         :port => config[:websocket_port],
       }
+      set :no_xss, config[:no_xss]
     end
 
   end

@@ -15,7 +15,7 @@ FancyPrint prints things to your browser.
 
 Usage:
   #{command_name} -h|--help
-  #{command_name} server [--host=<hostname>] [-p=<port>|--port=<port>] [--websocket-port=<ws_port>] [--websocket-host=<ws_host>]
+  #{command_name} server [--host=<hostname>] [-p=<port>|--port=<port>] [--websocket-port=<ws_port>] [--websocket-host=<ws_host>] [--no-xss]
   #{command_name} plot [<data>|-f <file>] [--scatter] [--msg=<message>]
   #{command_name} diff [<string1> <string2>|--file1=<file1> --file2=<file2>] [--msg=<message>]
   #{command_name} text [<string>|-f <file>] [--highlight=<strings>|--regex=<regexps>] [--msg=<message>]
@@ -27,14 +27,17 @@ Usage:
   #{command_name} haml [<string>|-f <file>] [--msg=<message>]
 
 Options:
-  --h  --help              Show this help.
-  --host=<hostname>        Host to use for the server.
-  -p=<port> --port=<port>  Port to use for the server.
-  --scatter                Use scatter plot (instead of line plot).
-  --highlight=<strings>    A list of strings to hightlight.
-  --regex=<regexps>        A list of regular expressions to hightlight.
-  --lang=<extension>       Markup language type (file extension like `md' or `textile').
-  --head                   Use the first subarray of the data array as table head.
+  --h  --help                 Show this help.
+  --host=<hostname>           Host to use for the server.
+  -p=<port> --port=<port>     Port to use for the server.
+  --websocket-port=<ws_port>  Port to use for the WebSocket server.
+  --websocket-host=<ws_host>  Host to use for the WebSocket server.
+  --no-xss                    Disallow all XSS-prone output types (HTML, SVG, ...)
+  --scatter                   Use scatter plot (instead of line plot).
+  --highlight=<strings>       A list of strings to hightlight.
+  --regex=<regexps>           A list of regular expressions to hightlight.
+  --lang=<extension>          Markup language type (file extension like `md' or `textile').
+  --head                      Use the first subarray of the data array as table head.
 
 DOCOPT
 
@@ -73,6 +76,7 @@ DOCOPT
               :websocket_host =>
               (options['--websocket-host'] if
                options['--websocket-host']) || 'localhost',
+              :no_xss => options['--no-xss'] || false,
             }
             File.delete(config_file) if File.exists?(config_file)
             File.open(config_file, 'w+') do |f|

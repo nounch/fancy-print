@@ -34,8 +34,25 @@ table-bordered table-condensed">'
       end
     end
 
+    def protect_from_xss
+      raise Exception, 'No XSS-prone output types allowed.' if
+        settings.no_xss
+    end
+
     def plot_plot
       begin
+        # Limit the size of each parameter.
+        params.each do |k, v|
+          if k != 'image'
+            raise Exception, 'Parameter size exceeds limits.' if v.length >
+              3000000
+          else
+            raise Exception, 'Parameter size exceeds limits.' if v.size >
+              6000000
+          end
+        end
+
+        # Dispatch the parameters.
         if ['scatter', 'line', ''].include?(params[:type])
           # Line + scatter plot
           response = {
@@ -50,7 +67,7 @@ table-bordered table-condensed">'
           diff = Diffy::Diff.new(params[:a], params[:b]).to_s(:html)
           ascii = Diffy::Diff.new(params[:a], params[:b])
           response = {
-            :data => diff,
+            :data => CGI.escapeHTML(diff),
             :ascii => ascii,
             :description => params[:description] || '',
             :time => Time.now || '',
@@ -82,7 +99,7 @@ table-bordered table-condensed">'
             text.gsub!(Regexp.new(token), prefix + "\\0" + suffix)
           end
           response = {
-            :data => text,
+            :data => CGI.escapeHTML(text),
             :description => params[:description] || '',
             :time => Time.now || '',
             :type => 'text',
@@ -101,6 +118,7 @@ table-bordered table-condensed">'
           }
         elsif params[:type] == 'html'
           # HTML
+          protect_from_xss()
           response = {
             :data => params[:data],
             :description => params[:description] || '',
@@ -109,6 +127,7 @@ table-bordered table-condensed">'
           }
         elsif params[:type] == 'svg'
           # SVG
+          protect_from_xss()
           response = {
             :data => params[:data],
             :description => params[:description] || '',
@@ -143,6 +162,7 @@ table-bordered table-condensed">'
           }
         elsif params[:type] == 'haml'
           # Table
+          protect_from_xss()
           html = Haml::Engine.new(params[:data]).render
           response = {
             :data => html,
