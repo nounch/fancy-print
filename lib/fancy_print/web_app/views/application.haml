@@ -14,13 +14,23 @@
         %div#main-navbar-collapse.collapse.navbar-collapse
           %ul.nav.navbar-nav.pull-right
             %li
-              %a{:href => ''} About
+              %a#client-info-button{:href => '#'} Client
             %li
-              %a{:href => ''} How it works
+              %a#api-info-button{:href => '#'} API
             %li
-              %a{:href => ''} Press
-            %li
-              %a{:href => ''} Contact
+              %a#cli-info-button{:href => '#'} CLI
+
+    %div#info-modal.modal.fade{'tabindex' => '-1', 'role' => 'dialog', 'aria-hidden' => 'true'}
+      %div.modal-dialog
+        %div.modal-content
+          %div.modal-header
+            %button.close{'type' => 'button', 'data-dismiss' => 'modal'}
+              %span{'aria-hidden' => 'true'} &times;
+              %span.sr-only Close;
+            %span &nbsp;
+          %div.modal-body
+          %div.modal-footer
+            %button.btn.btn-default{'type' => 'button', 'data-dismiss' => 'modal'} OK
 
     %div.container
       = yield

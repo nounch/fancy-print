@@ -3,4 +3,4 @@
 :port: 3044
 :websocket_port: 5503
 :websocket_host: localhost
-:no_xss: true
+:no_xss: false

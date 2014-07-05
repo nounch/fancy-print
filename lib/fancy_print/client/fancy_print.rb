@@ -141,7 +141,7 @@ module FancyPrint
     def self.fp_image(image, **options)
       image = Base64.encode64(image)
       description = options[@@description_identifier] || ''
-      type = options[:type] || ''
+      type = options[:type].downcase || 'png'
       Net::HTTP.post_form(URI.parse(@@post_url),
                           {
                             'data' => image,
@@ -238,10 +238,6 @@ class Object
 
   def fp_table(data, **options)
     FancyPrint::Client.fp_table(data, options || {})
-  end
-
-  def fp_haml(haml, **options)
-    FancyPrint::Client.fp_haml(haml, options || {})
   end
 
   def fp_haml(haml, **options)
